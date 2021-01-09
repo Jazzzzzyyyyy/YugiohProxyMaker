@@ -23,12 +23,12 @@ import org.jsoup.select.Elements;
  * @author Alan
  */
 public class CardFetcher {
-    private final String BASE_URL = "https://yugioh.fandom.com/wiki/";
-    
+    private final String BASE_URL = "https://yugipedia.com/wiki/";
+    //UPDATED
     //add different image urls
     
-    private final String SEARCH_URL = "https://yugioh.fandom.com/wiki/Special:Search?query=";
-    
+    private final String SEARCH_URL = "https://yugipedia.com/index.php?search=";
+    //UPDATED
     private Document currentDoc;
     
     private HashMap<String, String> cardTableDetails;
@@ -120,7 +120,7 @@ public class CardFetcher {
         }
         HashMap<String, String> cardDetails = new HashMap<>();
         
-        Elements cardTable = currentDoc.getElementsByClass("cardtable");
+        Elements cardTable = currentDoc.getElementsByClass("card-table effect-card");
         if(cardTable.isEmpty()){
             return null;
         }
@@ -330,13 +330,13 @@ public class CardFetcher {
         if(!doesCardExist()){
             return null;
         }
-        Elements cardtablerowElements = currentDoc.getElementsByClass("cardtablespanrow");
-        
+        Elements cardtablerowElements = currentDoc.getElementsByClass("lore");
+        //UPDATED
         Elements descriptionElements = null;
         for(int i=0;i<cardtablerowElements.size();i++){
             Element e = cardtablerowElements.get(i);
             if(e.child(0).text().equals("Card descriptions")){
-                descriptionElements = e.getElementsByClass("navbox-title");
+                descriptionElements = e.getElementsByClass("lore");
                 break;
             }
         }
@@ -347,7 +347,7 @@ public class CardFetcher {
         for(int i=0;i<descriptionElements.size();i++){
             Element e = descriptionElements.get(i);
             if(e.text().equals("English")){
-                Element data = e.parent().parent().getElementsByClass("navbox-list").get(0);
+                Element data = e.parent().parent().getElementsByClass("lore").get(0);
                 String s = br2nl(data.html());
                 String[] descriptions = s.split("\n");
                 return descriptions;
@@ -399,7 +399,7 @@ public class CardFetcher {
         if(!doesCardExist()){
             return null;
         }
-        Elements elements = currentDoc.getElementsByClass("cardtable-cardimage");
+        Elements elements = currentDoc.getElementsByClass("cardtable-main_image-wrapper");
         String url = elements.get(0).getElementsByTag("a").get(0).attr("href");
         return url;
     }
